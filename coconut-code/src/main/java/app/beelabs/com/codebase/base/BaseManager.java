@@ -2,6 +2,8 @@ package app.beelabs.com.codebase.base;
 
 import android.util.Log;
 
+import com.datatheorem.android.trustkit.pinning.OkHttp3Helper;
+
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -68,13 +70,20 @@ public class BaseManager {
         }
         return httpClient.build();
     }
+
     protected OkHttpClient getHttpClient(boolean allowUntrustedSSL,
                                          int timeout,
                                          boolean enableLoggingHttp,
                                          final String PedePublicKeyRSA,
                                          Interceptor interceptor) {
 
-        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+//        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        final OkHttpClient.Builder httpClient =
+                new OkHttpClient.Builder()
+                        .sslSocketFactory(OkHttp3Helper.getSSLSocketFactory(), OkHttp3Helper.getTrustManager())
+                        .addInterceptor(OkHttp3Helper.getPinningInterceptor())
+                        .followRedirects(false)
+                        .followSslRedirects(false);
 
         if (allowUntrustedSSL) {
             allowUntrustedSSL(httpClient);
@@ -89,9 +98,7 @@ public class BaseManager {
                 SSLContext sc = SSLContext.getInstance("TLSv1.2");
                 sc.init(null, new TrustManager[]{trustManager}, null);
                 httpClient.sslSocketFactory(new TLS12SocketFactory(sc.getSocketFactory()));
-            } catch (NoSuchAlgorithmException | KeyManagementException | IllegalStateException e) {
-                e.printStackTrace();
-            } catch (KeyStoreException e) {
+            } catch (NoSuchAlgorithmException | KeyManagementException | IllegalStateException | KeyStoreException e) {
                 e.printStackTrace();
             }
         }
@@ -121,8 +128,13 @@ public class BaseManager {
                                          boolean enableLoggingHttp,
                                          final String PedePublicKeyRSA) {
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        final OkHttpClient.Builder httpClient =
+                new OkHttpClient.Builder()
+                        .sslSocketFactory(OkHttp3Helper.getSSLSocketFactory(), OkHttp3Helper.getTrustManager())
+                        .addInterceptor(OkHttp3Helper.getPinningInterceptor())
+                        .followRedirects(false)
+                        .followSslRedirects(false);
         if (allowUntrustedSSL) {
             allowUntrustedSSL(httpClient);
             try {
@@ -136,9 +148,7 @@ public class BaseManager {
                 SSLContext sc = SSLContext.getInstance("TLSv1.2");
                 sc.init(null, new TrustManager[]{trustManager}, null);
                 httpClient.sslSocketFactory(new TLS12SocketFactory(sc.getSocketFactory()));
-            } catch (NoSuchAlgorithmException | KeyManagementException | IllegalStateException e) {
-                e.printStackTrace();
-            } catch (KeyStoreException e) {
+            } catch (NoSuchAlgorithmException | KeyManagementException | IllegalStateException | KeyStoreException e) {
                 e.printStackTrace();
             }
         }

@@ -2,16 +2,20 @@ package app.beelabs.com.codebase.base;
 
 import android.app.Application;
 
+import com.datatheorem.android.trustkit.TrustKit;
+import com.datatheorem.android.trustkit.config.TrustkitModel;
+import com.google.gson.Gson;
+
 import app.beelabs.com.codebase.R;
 import app.beelabs.com.codebase.di.component.AppComponent;
 import app.beelabs.com.codebase.di.component.DaggerAppComponent;
 import app.beelabs.com.codebase.di.module.ApiServiceModule;
 import app.beelabs.com.codebase.di.module.AppModule;
-import app.beelabs.com.codebase.support.util.FontUtil;
-//import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
+
+//import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by arysuryawan on 11/15/17.
@@ -30,7 +34,7 @@ public class BaseApp extends Application {
                 .build();
     }
 
-    protected static void setupDefaultFont(String defaultPath){
+    protected static void setupDefaultFont(String defaultPath) {
 
 //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
 //                .setDefaultFontPath(defaultPath)
@@ -47,4 +51,8 @@ public class BaseApp extends Application {
                 .build());
     }
 
+    protected void setupTrustkitSslSetting(TrustkitModel setting) {
+        String str = new Gson().toJson(setting);
+        TrustKit.initializeWithNetworkSecurityConfiguration(this, str);
+    }
 }
