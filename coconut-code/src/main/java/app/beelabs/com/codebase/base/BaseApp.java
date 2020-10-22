@@ -6,6 +6,8 @@ import com.datatheorem.android.trustkit.TrustKit;
 import com.datatheorem.android.trustkit.config.TrustkitModel;
 import com.google.gson.Gson;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import app.beelabs.com.codebase.R;
 import app.beelabs.com.codebase.di.component.AppComponent;
 import app.beelabs.com.codebase.di.component.DaggerAppComponent;
@@ -51,8 +53,7 @@ public class BaseApp extends Application {
                 .build());
     }
 
-    protected void setupTrustkitSslSetting(TrustkitModel setting) {
-        String str = new Gson().toJson(setting);
+    protected void setupTrustkitSslSetting(String str) {
         TrustKit.initializeWithNetworkSecurityConfiguration(this, str);
     }
 }
