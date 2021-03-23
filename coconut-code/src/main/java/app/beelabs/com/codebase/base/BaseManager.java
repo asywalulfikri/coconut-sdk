@@ -75,7 +75,21 @@ public class BaseManager {
                                          int timeout,
                                          boolean enableLoggingHttp,
                                          final String PedePublicKeyRSA,
-                                         Interceptor interceptor) {
+                                         Interceptor appInterceptor) {
+
+        Interceptor[] interceptors = new Interceptor[1];
+        interceptors[0] = appInterceptor;
+
+        return getHttpClient(allowUntrustedSSL, timeout, enableLoggingHttp, PedePublicKeyRSA, interceptors, null);
+
+    }
+
+    protected OkHttpClient getHttpClient(boolean allowUntrustedSSL,
+                                         int timeout,
+                                         boolean enableLoggingHttp,
+                                         final String PedePublicKeyRSA,
+                                         Interceptor[] appInterceptor,
+                                         Interceptor[] netInterceptor) {
 
 //        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         final OkHttpClient.Builder httpClient =
@@ -117,7 +131,18 @@ public class BaseManager {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             httpClient.addInterceptor(logging);
-            httpClient.addInterceptor(interceptor);
+        }
+
+        if (appInterceptor != null) {
+            for (Interceptor interceptor : appInterceptor) {
+                httpClient.addInterceptor(interceptor);
+            }
+        }
+
+        if (netInterceptor != null) {
+            for (Interceptor interceptor : netInterceptor) {
+                httpClient.addNetworkInterceptor(interceptor);
+            }
         }
 
         return httpClient.build();
@@ -205,7 +230,7 @@ public class BaseManager {
         } catch (KeyManagementException e) {
             e.printStackTrace();
         }
-        httpClient.sslSocketFactory(sslContext.getSocketFactory());
+        httpClient.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
 
         HostnameVerifier hostnameVerifier = new HostnameVerifier() {
             @Override

@@ -1,9 +1,7 @@
 package app.beelabs.com.codebase.base;
 
 
-import app.beelabs.com.codebase.IConfig;
 import app.beelabs.com.codebase.di.IApi;
-import app.beelabs.com.codebase.di.IApiService;
 import app.beelabs.com.codebase.di.component.AppComponent;
 import okhttp3.Interceptor;
 
@@ -74,6 +72,10 @@ public class BaseApi {
         return setupApi(appComponent, clazz, allowUntrusted, timeout, enableLoggingHttp, null, interceptor);
     }
 
+    public Object setupApi(AppComponent appComponent, Class clazz, boolean allowUntrusted, int timeout, boolean enableLoggingHttp, Interceptor[] appInterceptor, Interceptor[] netInterceptor) {
+        return setupApi(appComponent, clazz, allowUntrusted, timeout, enableLoggingHttp, null, appInterceptor, netInterceptor);
+    }
+
 
     public Object setupApi(AppComponent appComponent, Class clazz, boolean allowUntrusted, int timeout, boolean enableLoggingHttp, String PedePublicKeyRSA) {
         IApi api = appComponent.getApi();
@@ -84,5 +86,20 @@ public class BaseApi {
         IApi api = appComponent.getApi();
         return api.initApiService(getApiDomain(), allowUntrusted, clazz, timeout, enableLoggingHttp, PedePublicKeyRSA, interceptor);
     }
+
+    public Object setupApi(AppComponent appComponent, Class clazz, boolean allowUntrusted, int timeout, boolean enableLoggingHttp, String PedePublicKeyRSA, Interceptor[] appInterceptor, Interceptor[] netInterceptor) {
+        IApi api = appComponent.getApi();
+        return api.initApiService(getApiDomain(), allowUntrusted, clazz, timeout, enableLoggingHttp, PedePublicKeyRSA, appInterceptor, netInterceptor);
+    }
 }
+
+
+
+
+
+
+
+
+
+
 
