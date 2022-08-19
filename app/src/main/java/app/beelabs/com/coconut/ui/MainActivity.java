@@ -3,6 +3,7 @@ package app.beelabs.com.coconut.ui;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import app.beelabs.com.coconut.App;
 import app.beelabs.com.coconut.IConfig;
@@ -63,7 +64,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onApiFailureCallback(String message, BaseActivity ac) {
-        super.onApiFailureCallback(message, ac);
+        //super.onApiFailureCallback(message, ac);
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 
     @Override
