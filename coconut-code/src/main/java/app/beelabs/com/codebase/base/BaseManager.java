@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 //import com.chuckerteam.chucker.api.ChuckerInterceptor;
+import com.chuckerteam.chucker.api.ChuckerInterceptor;
 import com.datatheorem.android.trustkit.pinning.OkHttp3Helper;
 
 import java.security.KeyManagementException;
@@ -277,7 +278,7 @@ public class BaseManager {
         }
 
 
-       /* ChuckerInterceptor   chuckerInterceptor = new ChuckerInterceptor.Builder(context)
+        ChuckerInterceptor chuckerInterceptor = new ChuckerInterceptor.Builder(context)
 
                 .maxContentLength(250_000L)
 
@@ -286,7 +287,7 @@ public class BaseManager {
 
 
                 .build();
-*/
+
         httpClient.connectTimeout(timeout, TimeUnit.SECONDS);
         httpClient.readTimeout(timeout, TimeUnit.SECONDS);
         httpClient.writeTimeout(timeout, TimeUnit.SECONDS);
@@ -298,7 +299,7 @@ public class BaseManager {
         if (enableLoggingHttp) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-           // httpClient.addInterceptor(chuckerInterceptor);
+            httpClient.addInterceptor(chuckerInterceptor);
 
             httpClient.addInterceptor(logging);
         }
