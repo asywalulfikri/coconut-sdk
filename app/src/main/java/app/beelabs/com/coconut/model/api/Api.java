@@ -27,7 +27,8 @@ public class Api extends BaseApi {
     synchronized private static ApiService initApiDomainSFA2(Context context) {
         getInstance().setApiDomain("https://sfa2.ottopay.id/v1/");
 
-        return (ApiService) getInstance().setupApi(App.getAppComponent(), ApiService.class, true, app.beelabs.com.codebase.IConfig.TIMEOUT_SHORT_INSECOND, true, IConfig.PUBLIC_KEY_RSA);
+        return (ApiService) getInstance().setupApi(App.getAppComponent(),context, ApiService.class, true, 70, true, IConfig.PUBLIC_KEY_RSA,null);
+       // return (ApiService) getInstance().setupApi(App.getAppComponent(), ApiService.class, true, app.beelabs.com.codebase.IConfig.TIMEOUT_SHORT_INSECOND, true, IConfig.PUBLIC_KEY_RSA);
     }
 
     synchronized private static ApiService initApiDomain3(Context context) {

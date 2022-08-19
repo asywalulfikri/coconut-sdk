@@ -1,5 +1,7 @@
 package app.beelabs.com.codebase.di.manager;
 
+import android.content.Context;
+
 import app.beelabs.com.codebase.base.BaseManager;
 import app.beelabs.com.codebase.di.IApi;
 import app.beelabs.com.codebase.di.IApiService;
@@ -45,14 +47,7 @@ public class ApiManager extends BaseManager implements IApi {
             this.apiDomain = apiDomain;
         }
         return api;
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(apiDomain)
-//                .addConverterFactory(JacksonConverterFactory.create())
-//                .client(getHttpClient(allowUntrusted, timeout, enableLoggingHttp, interceptors))
-//                .build();
-//        api = retrofit.create(clazz);
-//
-//        return api;
+
     }
 
     @Override
@@ -62,6 +57,20 @@ public class ApiManager extends BaseManager implements IApi {
                     .baseUrl(apiDomain)
                     .addConverterFactory(JacksonConverterFactory.create())
                     .client(getHttpClient(allowUntrusted, timeout, enableLoggingHttp, PedePublicKeyRSA, appInterceptor, netInterceptor))
+                    .build();
+            api = retrofit.create(clazz);
+            this.apiDomain = apiDomain;
+        }
+        return api;
+    }
+
+    @Override
+    public Object initApiService(Context context, String apiDomain, boolean allowUntrusted, Class<IApiService> clazz, int timeout, boolean enableLoggingHttp, String PedePublicKeyRSA, Interceptor interceptor) {
+        if (api == null || !this.apiDomain.equals(apiDomain)) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(apiDomain)
+                    .addConverterFactory(JacksonConverterFactory.create())
+                    .client(getHttpClient(context,allowUntrusted, timeout, enableLoggingHttp, PedePublicKeyRSA, interceptor))
                     .build();
             api = retrofit.create(clazz);
             this.apiDomain = apiDomain;

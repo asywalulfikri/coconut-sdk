@@ -1,3 +1,4 @@
+/*
 package app.beelabs.com.codebase.base;
 
 import android.util.Log;
@@ -24,9 +25,11 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
+*/
 /**
  * Created by arysuryawan on 11/10/17.
- */
+ *//*
+
 
 public class BaseManager {
 
@@ -243,3 +246,4 @@ public class BaseManager {
 
     }
 }
+*/
