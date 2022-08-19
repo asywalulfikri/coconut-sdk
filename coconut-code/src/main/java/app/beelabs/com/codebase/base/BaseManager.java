@@ -1,8 +1,9 @@
-/*
 package app.beelabs.com.codebase.base;
 
+import android.content.Context;
 import android.util.Log;
 
+//import com.chuckerteam.chucker.api.ChuckerInterceptor;
 import com.datatheorem.android.trustkit.pinning.OkHttp3Helper;
 
 import java.security.KeyManagementException;
@@ -25,11 +26,9 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-*/
 /**
  * Created by arysuryawan on 11/10/17.
- *//*
-
+ */
 
 public class BaseManager {
 
@@ -245,5 +244,65 @@ public class BaseManager {
         httpClient.hostnameVerifier(hostnameVerifier);
 
     }
-}
+
+
+    protected OkHttpClient getHttpClient(Context context, boolean allowUntrustedSSL,
+                                         int timeout,
+                                         boolean enableLoggingHttp,
+                                         final String PedePublicKeyRSA, Interceptor interceptor) {
+
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        final OkHttpClient.Builder httpClient =
+                new OkHttpClient.Builder()
+                        .sslSocketFactory(OkHttp3Helper.getSSLSocketFactory(), OkHttp3Helper.getTrustManager())
+                        .addInterceptor(OkHttp3Helper.getPinningInterceptor())
+                        .followRedirects(false)
+                        .followSslRedirects(false);
+        if (allowUntrustedSSL) {
+            allowUntrustedSSL(httpClient);
+            try {
+                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                trustManagerFactory.init((KeyStore) null);
+                TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+                if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+                    throw new IllegalStateException("Unexpected default trust managers:" + java.util.Arrays.toString(trustManagers));
+                }
+                X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
+                SSLContext sc = SSLContext.getInstance("TLSv1.2");
+                sc.init(null, new TrustManager[]{trustManager}, null);
+                httpClient.sslSocketFactory(new TLS12SocketFactory(sc.getSocketFactory()));
+            } catch (NoSuchAlgorithmException | KeyManagementException | IllegalStateException | KeyStoreException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+       /* ChuckerInterceptor   chuckerInterceptor = new ChuckerInterceptor.Builder(context)
+
+                .maxContentLength(250_000L)
+
+
+                .alwaysReadResponseBody(true)
+
+
+                .build();
 */
+        httpClient.connectTimeout(timeout, TimeUnit.SECONDS);
+        httpClient.readTimeout(timeout, TimeUnit.SECONDS);
+        httpClient.writeTimeout(timeout, TimeUnit.SECONDS);
+
+        // interceptor RSA for body encryption
+        httpClient.addInterceptor(new RequestInterceptor(PedePublicKeyRSA));
+
+        // interceptor logging HTTP request
+        if (enableLoggingHttp) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+           // httpClient.addInterceptor(chuckerInterceptor);
+
+            httpClient.addInterceptor(logging);
+        }
+
+        return httpClient.build();
+    }
+}
