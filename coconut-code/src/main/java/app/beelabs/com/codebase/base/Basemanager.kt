@@ -286,7 +286,6 @@ open class BaseManager {
             retentionPeriod = RetentionManager.Period.ONE_HOUR
         )
 
-        @Suppress("MagicNumber")
         val chuckerInterceptor = ChuckerInterceptor.Builder(context)
             .collector(collector)
             .maxContentLength(250_000L)

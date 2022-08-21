@@ -21,7 +21,9 @@ public class Api extends BaseApi {
 
     synchronized private static ApiService initApiDomain(Context context) {
         getInstance().setApiDomain(IConfig.API_BASE_URL);
-        return (ApiService) getInstance().setupApi(App.getAppComponent(), ApiService.class, true, app.beelabs.com.codebase.IConfig.TIMEOUT_SHORT_INSECOND, true);
+        return (ApiService) getInstance().setupApi(App.getAppComponent(),context, ApiService.class, true, 70, true, IConfig.PUBLIC_KEY_RSA,null);
+
+        // return (ApiService) getInstance().setupApi(App.getAppComponent(), ApiService.class, true, app.beelabs.com.codebase.IConfig.TIMEOUT_SHORT_INSECOND, true);
     }
 
     synchronized private static ApiService initApiDomainSFA2(Context context) {
@@ -33,8 +35,9 @@ public class Api extends BaseApi {
 
     synchronized private static ApiService initApiDomain3(Context context) {
         getInstance().setApiDomain("https://indoalliz-prod.apigee.net/ottosg/api/");
+        return (ApiService) getInstance().setupApi(App.getAppComponent(),context, ApiService.class, true, 70, true, IConfig.PUBLIC_KEY_RSA,null);
 
-        return (ApiService) getInstance().setupApi(App.getAppComponent(), ApiService.class, true, 120, true, IConfig.PUBLIC_KEY_RSA);
+        // return (ApiService) getInstance().setupApi(App.getAppComponent(), ApiService.class, true, 120, true, IConfig.PUBLIC_KEY_RSA);
     }
 
 
