@@ -18,18 +18,14 @@ android {
         targetSdkVersion 32
         versionCode 1
         versionName "2.2.17p"
-        multiDexEnabled true
+
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,7 +44,7 @@ dependencies {
       // implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'io.github.inflationx:calligraphy3:3.1.1'
     implementation 'io.github.inflationx:viewpump:2.0.3'
-    implementation 'androidx.multidex:multidex:2.0.1'
+
 
     implementation 'com.squareup.okhttp3:okhttp:4.6.0'  // OkHttp
     implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0' // OkHttp logging
